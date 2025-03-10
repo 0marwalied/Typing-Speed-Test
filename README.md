@@ -25,11 +25,3 @@ A **Typing Speed Test** web application that allows users to measure their **wor
 3. Your **WPM and accuracy** will be calculated after time runs out.  
 4. Click the **reload button** 🔄 to try again.  
 
-## 📊 How WPM is Calculated  
-
-\[
-WPM = \frac{\text{Total Characters Typed} \div 5}{\text{Time in Minutes}}
-\]
-
-- Accuracy is calculated based on **correct vs incorrect characters**.  
-
