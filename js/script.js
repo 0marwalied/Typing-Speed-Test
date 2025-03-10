@@ -14,6 +14,7 @@ let correctWord = "";
 let userWord = "";
 let startTime;
 let endTime;
+let wrongChars = 0;
 let ranges = {
   15: [10, 20],
   30: [20, 30],
@@ -87,6 +88,7 @@ addEventListener("keydown", (event) => {
     currentLetterSpan.classList.add("incorrect");
     currentLetterSpan.classList.remove("currentLetter");
     currentLetter++;
+    wrongChars++;
     if (currentLetter === currentWordDiv.children.length) {
       currentWord++, (currentLetter = 0);
       currentWordDiv = wordContainer.children[currentWord];
@@ -98,6 +100,8 @@ addEventListener("keydown", (event) => {
     currentLetterSpan.classList.remove("correct");
     currentLetterSpan.classList.remove("currentLetter");
     currentLetter--;
+    userWord = userWord.slice(0, -1);
+    correctWord = correctWord.slice(0, -1);
     if (currentLetter === -1) {
       currentWord--;
       if (currentWord === -1) (currentWord = 0), (currentLetter = 0);
@@ -141,6 +145,10 @@ function getResult() {
     userWord,
     (endTime - startTime) / 1000
   );
+
+  console.log(correctWord);
+  console.log(userWord);
+
   let resultDiv = document.querySelector(".result");
   let wpm = document.createElement("div");
   wpm.innerHTML = `WPM: ${result.wpm}`;
@@ -164,11 +172,11 @@ function calculateWPMWithAccuracy(correctText, userText, timeInSeconds) {
   const correctChars = [...userText].filter(
     (char, i) => char === correctText[i]
   ).length;
-  const accuracy = (correctChars / userText.length) * 100;
+  const totalChars = userText.length;
+  const accuracy = ((totalChars - wrongChars) / userText.length) * 100;
   const words = userText.length / 5;
   const timeInMinutes = timeInSeconds / 60;
   const wpm = Math.round(words / timeInMinutes);
-  const totalChars = userText.length;
   const correctCharsCount = correctChars;
   const wrongCharsCount = totalChars - correctCharsCount;
 
