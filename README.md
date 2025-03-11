@@ -2,6 +2,9 @@
 
 A **Typing Speed Test** web application that allows users to measure their **words per minute (WPM)** and **accuracy** within a set time limit.  
 
+🔗 **Live Demo:** [Typing Speed Test](https://0marwalied.github.io/Typing-Speed-Test/)
+
+
 ## 🚀 Features  
 
 - ✅ Random word generation for testing typing speed.  
@@ -24,7 +27,4 @@ A **Typing Speed Test** web application that allows users to measure their **wor
 2. **Start typing the displayed words**.  
 3. Your **WPM and accuracy** will be calculated after time runs out.  
 4. Click the **reload button** 🔄 to try again.
-
-
-## 🔗 Live Demo: https://0marwalied.github.io/Typing-Speed-Test/
 
