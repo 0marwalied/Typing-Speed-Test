@@ -40,7 +40,7 @@ h1 {
 }
 .seconds {
   font-weight: 400;
-  opacity: 0; /*  don't forget to make it zero */
+  visibility: hidden;
 }
 .options {
   list-style: none;

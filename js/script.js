@@ -2,6 +2,7 @@ import words from "./data.js";
 
 let currentWord = 0;
 let currentLetter = 0;
+let options = document.querySelector(".options");
 let seconds = document.querySelector(".seconds");
 seconds.innerHTML = sessionStorage.getItem("seconds") || "15";
 let wordContainer = document.querySelector(".words");
@@ -50,9 +51,8 @@ function getWords() {
 getWords();
 
 let currentWordDiv = wordContainer.children[currentWord];
-let currentLetterSpan = currentWordDiv.children[currentLetter];
-
-currentLetterSpan.classList.add("currentLetter");
+let currentLetterLetter = currentWordDiv.children[currentLetter];
+currentLetterLetter.classList.add("currentLetter");
 
 addEventListener("click", (e) => {
   if (e.target.tagName === "LI" && e.target.textContent != "seconds") {
@@ -61,6 +61,11 @@ addEventListener("click", (e) => {
     e.target.classList.add("active");
     seconds.innerHTML = e.target.textContent;
     if (endTry === false) getWords();
+    currentWord = 0;
+    currentLetter = 0;
+    currentWordDiv = wordContainer.children[currentWord];
+    currentLetterLetter = currentWordDiv.children[currentLetter];
+    currentLetterLetter.classList.add("currentLetter");
   }
 });
 
@@ -68,37 +73,38 @@ addEventListener("keydown", (event) => {
   if (startTyping === false) {
     startTyping = true;
     startTime = Date.now();
+    options.style.display = "none";
   }
-  if (!endTry) seconds.style.opacity = "1";
-  if (event.key === currentLetterSpan.innerHTML) {
+  if (!endTry) seconds.style.visibility = "visible";
+  if (event.key === currentLetterLetter.innerHTML) {
     correctWord += event.key;
     userWord += event.key;
-    currentLetterSpan.classList.add("correct");
-    currentLetterSpan.classList.remove("currentLetter");
+    currentLetterLetter.classList.add("correct");
+    currentLetterLetter.classList.remove("currentLetter");
     currentLetter++;
     if (currentLetter === currentWordDiv.children.length) {
       currentWord++, (currentLetter = 0);
       currentWordDiv = wordContainer.children[currentWord];
     }
-    currentLetterSpan = currentWordDiv.children[currentLetter];
-    currentLetterSpan.classList.add("currentLetter");
+    currentLetterLetter = currentWordDiv.children[currentLetter];
+    currentLetterLetter.classList.add("currentLetter");
   } else if (event.key !== "Backspace") {
     userWord += event.key;
-    correctWord += currentLetterSpan.innerHTML;
-    currentLetterSpan.classList.add("incorrect");
-    currentLetterSpan.classList.remove("currentLetter");
+    correctWord += currentLetterLetter.innerHTML;
+    currentLetterLetter.classList.add("incorrect");
+    currentLetterLetter.classList.remove("currentLetter");
     currentLetter++;
     wrongChars++;
     if (currentLetter === currentWordDiv.children.length) {
       currentWord++, (currentLetter = 0);
       currentWordDiv = wordContainer.children[currentWord];
     }
-    currentLetterSpan = currentWordDiv.children[currentLetter];
-    currentLetterSpan.classList.add("currentLetter");
+    currentLetterLetter = currentWordDiv.children[currentLetter];
+    currentLetterLetter.classList.add("currentLetter");
   } else {
-    currentLetterSpan.classList.remove("incorrect");
-    currentLetterSpan.classList.remove("correct");
-    currentLetterSpan.classList.remove("currentLetter");
+    currentLetterLetter.classList.remove("incorrect");
+    currentLetterLetter.classList.remove("correct");
+    currentLetterLetter.classList.remove("currentLetter");
     currentLetter--;
     userWord = userWord.slice(0, -1);
     correctWord = correctWord.slice(0, -1);
@@ -109,10 +115,10 @@ addEventListener("keydown", (event) => {
         currentLetter = wordContainer.children[currentWord].children.length - 1;
       currentWordDiv = wordContainer.children[currentWord];
     }
-    currentLetterSpan = currentWordDiv.children[currentLetter];
-    currentLetterSpan.classList.add("currentLetter");
-    currentLetterSpan.classList.remove("incorrect");
-    currentLetterSpan.classList.remove("correct");
+    currentLetterLetter = currentWordDiv.children[currentLetter];
+    currentLetterLetter.classList.add("currentLetter");
+    currentLetterLetter.classList.remove("incorrect");
+    currentLetterLetter.classList.remove("correct");
   }
 });
 
@@ -123,7 +129,7 @@ let timer = setInterval(() => {
       startTyping = false;
       clearInterval(timer);
       seconds.innerHTML = sessionStorage.getItem("seconds") || "15";
-      seconds.style.opacity = "0";
+      seconds.style.visibility = "hidden";
       endTime = Date.now();
       endTry = true;
       getResult();
