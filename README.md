@@ -23,5 +23,8 @@ A **Typing Speed Test** web application that allows users to measure their **wor
 1. **Select a time limit** (default: 15 seconds).  
 2. **Start typing the displayed words**.  
 3. Your **WPM and accuracy** will be calculated after time runs out.  
-4. Click the **reload button** 🔄 to try again.  
+4. Click the **reload button** 🔄 to try again.
+
+
+## 🔗 Live Demo: https://0marwalied.github.io/Typing-Speed-Test/
 
