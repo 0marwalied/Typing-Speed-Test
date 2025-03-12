@@ -4,7 +4,6 @@ let currentWord = 0;
 let currentLetter = 0;
 let options = document.querySelector(".options");
 let seconds = document.querySelector(".seconds");
-seconds.innerHTML = sessionStorage.getItem("seconds") || "15";
 let wordContainer = document.querySelector(".words");
 let firstWord = true;
 let startTyping = false;
@@ -13,9 +12,11 @@ let endTry = false;
 let reload = document.querySelector(".reload");
 let correctWord = "";
 let userWord = "";
-let startTime;
-let endTime;
+let startTime = null;
+let endTime = null;
 let wrongChars = 0;
+let currentWordDiv = 0;
+let currentLetterLetter = 0;
 let ranges = {
   15: [10, 20],
   30: [20, 30],
@@ -23,24 +24,31 @@ let ranges = {
   120: [40, 50],
 };
 
-document.querySelector(".options li.active").classList.remove("active");
-document
-  .querySelector(`.options li[value="${seconds.innerHTML}"]`)
-  .classList.add("active");
+function initialize() {
+  seconds.innerHTML = sessionStorage.getItem("seconds") || "15";
+  document.querySelector(".options li.active").classList.remove("active");
+  document
+    .querySelector(`.options li[value="${seconds.innerHTML}"]`)
+    .classList.add("active");
+  getWords();
+  currentWordDiv = wordContainer.children[currentWord];
+  currentLetterLetter = currentWordDiv.children[currentLetter];
+  currentLetterLetter.classList.add("currentLetter");
+}
 
 function getWords() {
   numberOfWords = Math.floor(Math.random() * words.length);
   numberOfWords = Math.max(numberOfWords, ranges[seconds.innerHTML][0]);
   numberOfWords = Math.min(numberOfWords, ranges[seconds.innerHTML][1]);
   wordContainer.innerHTML = "";
-  for (let i = 0; i <= numberOfWords; i++) {
+  for (let i = 0; i < numberOfWords; i++) {
     let word = words[Math.floor(Math.random() * words.length)];
     let wordDiv = document.createElement("div");
     wordDiv.classList.add("word");
     let letters = word.split("");
-    if (i != words.length - 1) letters.push(" ");
+    if (i != numberOfWords - 1) letters.push(" ");
     letters.forEach((letter) => {
-      let letterSpan = document.createElement("letter");
+      let letterSpan = document.createElement("span");
       letterSpan.innerHTML = letter;
       wordDiv.appendChild(letterSpan);
     });
@@ -48,11 +56,6 @@ function getWords() {
     firstWord = false;
   }
 }
-getWords();
-
-let currentWordDiv = wordContainer.children[currentWord];
-let currentLetterLetter = currentWordDiv.children[currentLetter];
-currentLetterLetter.classList.add("currentLetter");
 
 addEventListener("click", (e) => {
   if (e.target.tagName === "LI" && e.target.textContent != "seconds") {
@@ -61,15 +64,14 @@ addEventListener("click", (e) => {
     e.target.classList.add("active");
     seconds.innerHTML = e.target.textContent;
     if (endTry === false) getWords();
-    currentWord = 0;
-    currentLetter = 0;
-    currentWordDiv = wordContainer.children[currentWord];
-    currentLetterLetter = currentWordDiv.children[currentLetter];
-    currentLetterLetter.classList.add("currentLetter");
+    initialize();
   }
 });
 
 addEventListener("keydown", (event) => {
+  if (event.key === "Shift") {
+    return;
+  }
   if (startTyping === false) {
     startTyping = true;
     startTime = Date.now();
@@ -102,9 +104,11 @@ addEventListener("keydown", (event) => {
     currentLetterLetter = currentWordDiv.children[currentLetter];
     currentLetterLetter.classList.add("currentLetter");
   } else {
-    currentLetterLetter.classList.remove("incorrect");
-    currentLetterLetter.classList.remove("correct");
-    currentLetterLetter.classList.remove("currentLetter");
+    currentLetterLetter.classList.remove(
+      "incorrect",
+      "correct",
+      "currentLetter"
+    );
     currentLetter--;
     userWord = userWord.slice(0, -1);
     correctWord = correctWord.slice(0, -1);
@@ -117,8 +121,7 @@ addEventListener("keydown", (event) => {
     }
     currentLetterLetter = currentWordDiv.children[currentLetter];
     currentLetterLetter.classList.add("currentLetter");
-    currentLetterLetter.classList.remove("incorrect");
-    currentLetterLetter.classList.remove("correct");
+    currentLetterLetter.classList.remove("incorrect", "correct");
   }
 });
 
@@ -152,22 +155,15 @@ function getResult() {
     (endTime - startTime) / 1000
   );
 
-  console.log(correctWord);
-  console.log(userWord);
-
   let resultDiv = document.querySelector(".result");
   let wpm = document.createElement("div");
   wpm.innerHTML = `WPM: ${result.wpm}`;
-
   let accuracy = document.createElement("div");
   accuracy.innerHTML = `Accuracy: ${result.accuracy}%`;
-
   let correctChars = document.createElement("div");
   correctChars.innerHTML = `Correct Characters: ${result.correctChars}`;
-
   let wrongChars = document.createElement("div");
   wrongChars.innerHTML = `Wrong Characters: ${result.wrongChars}`;
-
   resultDiv.appendChild(wpm);
   resultDiv.appendChild(accuracy);
   resultDiv.appendChild(correctChars);
@@ -193,3 +189,5 @@ function calculateWPMWithAccuracy(correctText, userText, timeInSeconds) {
     wrongChars: wrongCharsCount,
   };
 }
+
+initialize();
