@@ -41,6 +41,7 @@ h1 {
 .seconds {
   font-weight: 400;
   visibility: hidden;
+  color: #ac8f1f;
 }
 .options {
   list-style: none;
